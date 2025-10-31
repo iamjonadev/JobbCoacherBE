@@ -1,0 +1,316 @@
+{
+  "info": {
+    "name": "HaidersAPI - Authentication & Client Management",
+    "description": "Complete API testing suite for HaidersAPI built with Adoteam Enterprise Template",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5170",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im1pcm9AbXB4Z3J1cHBlbi5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsImV4cCI6MTc2MTgyODIwNn0.cww4fJB1M-zJw2hRjKbl_w4X9IytAReXRPM-Zsdc6wE",
+      "type": "string"
+    },
+    {
+      "key": "testClientId",
+      "value": "YOUR_CLIENT_ID_HERE",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔧 System Endpoints",
+      "item": [
+        {
+          "name": "Configuration Test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/config/test",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "config", "test"]
+            }
+          }
+        },
+        {
+          "name": "Database Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/test",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "database", "test"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔐 Authentication Controller",
+      "item": [
+        {
+          "name": "Auth Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "health"]
+            }
+          }
+        },
+        {
+          "name": "Validate Token (POST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{authToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/validate-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "validate-token"]
+            }
+          }
+        },
+        {
+          "name": "Validate Token by Parameter (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/validate-token/by-param/{{authToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "validate-token", "by-param", "{{authToken}}"]
+            }
+          }
+        },
+        {
+          "name": "Validate Token by Query (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/validate-token/by-query?token={{authToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "validate-token", "by-query"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Check Permission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"{{testClientId}}\",\n  \"action\": \"read\",\n  \"resource\": \"client\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/check-permission",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "check-permission"]
+            }
+          }
+        },
+        {
+          "name": "Get Accessible Clients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/clients",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "clients"]
+            }
+          }
+        },
+        {
+          "name": "Grant Client Access (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 2,\n  \"clientId\": \"{{testClientId}}\",\n  \"accessLevel\": \"ReadWrite\",\n  \"canViewFinancials\": true,\n  \"canManageInvoices\": true,\n  \"canManageExpenses\": false,\n  \"canViewReports\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/grant-access",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "grant-access"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧪 Authorization Testing",
+      "item": [
+        {
+          "name": "Test Invalid Token (Should Fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Invalid token returns 401', function() {",
+                  "    pm.expect(pm.response.code).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"invalid_token_here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/validate-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "validate-token"]
+            }
+          }
+        },
+        {
+          "name": "Test No Token (Should Fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('No token returns 401', function() {",
+                  "    pm.expect(pm.response.code).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Pre-request script for HaidersAPI",
+          "console.log('Running Pre-request Script for HaidersAPI');",
+          "",
+          "const currentToken = pm.collectionVariables.get('authToken');",
+          "if (currentToken) {",
+          "    console.log('Using token:', currentToken.substring(0, 20) + '...');",
+          "} else {",
+          "    console.log('No token found - may need to update authToken variable');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script",
+          "pm.test('Response time is reasonable', function() {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "// Log response for debugging",
+          "if (pm.response.code >= 400) {",
+          "    console.log('Error Response:', pm.response.text());",
+          "}"
+        ]
+      }
+    }
+  ]
+}

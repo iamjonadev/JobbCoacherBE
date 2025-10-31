@@ -1,0 +1,468 @@
+{
+  "info": {
+    "name": "HaidersAPI Contact Collection - Fixed",
+    "description": "Complete test collection for HaidersAPI contact form endpoints with proper CV file handling",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "haiders-contact-fixed-collection"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5170",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Contact Info",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains contact information\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('company');",
+              "    pm.expect(responseJson).to.have.property('supportEmail');",
+              "    pm.expect(responseJson).to.have.property('message');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/contact/info",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contact",
+            "info"
+          ]
+        },
+        "description": "Get basic contact information for the API"
+      },
+      "response": []
+    },
+    {
+      "name": "Test Email Connectivity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Email connectivity test successful\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson.isSuccess).to.be.true;",
+              "    pm.expect(responseJson.message).to.include('Email service');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/contact/test-email",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contact",
+            "test-email"
+          ]
+        },
+        "description": "Test email service connectivity and authentication"
+      },
+      "response": []
+    },
+    {
+      "name": "Submit Contact Form - No CV File",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Contact form submitted successfully\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson.isSuccess).to.be.true;",
+              "    pm.expect(responseJson.message).to.include('Tack för din ansökan');",
+              "    pm.expect(responseJson.submissionId).to.exist;",
+              "    pm.expect(responseJson.submittedAt).to.exist;",
+              "    pm.expect(responseJson.errors).to.be.an('array').that.is.empty;",
+              "});",
+              "",
+              "pm.test(\"Submission ID format is correct\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson.submissionId).to.match(/^[A-F0-9]{8}$/);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "Name",
+              "value": "John Andersson",
+              "description": "För- och efternamn",
+              "type": "text"
+            },
+            {
+              "key": "Email",
+              "value": "john.andersson@example.com",
+              "description": "E-postadress",
+              "type": "text"
+            },
+            {
+              "key": "Phone",
+              "value": "0701234567",
+              "description": "Telefonnummer",
+              "type": "text"
+            },
+            {
+              "key": "Kommun",
+              "value": "Stockholm",
+              "description": "Hemkommun",
+              "type": "text"
+            },
+            {
+              "key": "About",
+              "value": "Jag är en erfaren utvecklare med 5 års erfarenhet inom .NET och React. Jag söker nya möjligheter inom webbutveckling och har särskilt intresse för backend-utveckling med moderna teknologier som ASP.NET Core och Azure-tjänster.",
+              "description": "Beskrivning om sig själv",
+              "type": "text"
+            },
+            {
+              "key": "IsRegisteredAF",
+              "value": "Ja",
+              "description": "Inskriven på Arbetsförmedlingen (Ja/Nej)",
+              "type": "text"
+            },
+            {
+              "key": "AFRegistrationDate",
+              "value": "2024-01-15",
+              "description": "Datum för inskrivning på AF (YYYY-MM-DD)",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/contact/submit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contact",
+            "submit"
+          ]
+        },
+        "description": "Submit a contact form without CV file. This tests the optional CV file functionality and should work without issues."
+      },
+      "response": []
+    },
+    {
+      "name": "Submit Contact Form - With CV File",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Contact form submitted successfully\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson.isSuccess).to.be.true;",
+              "    pm.expect(responseJson.message).to.include('Tack för din ansökan');",
+              "    pm.expect(responseJson.submissionId).to.exist;",
+              "    pm.expect(responseJson.submittedAt).to.exist;",
+              "    pm.expect(responseJson.errors).to.be.an('array').that.is.empty;",
+              "});",
+              "",
+              "pm.test(\"Submission ID format is correct\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson.submissionId).to.match(/^[A-F0-9]{8}$/);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "Name",
+              "value": "John Andersson",
+              "description": "För- och efternamn",
+              "type": "text"
+            },
+            {
+              "key": "Email",
+              "value": "john.andersson@example.com",
+              "description": "E-postadress",
+              "type": "text"
+            },
+            {
+              "key": "Phone",
+              "value": "0701234567",
+              "description": "Telefonnummer",
+              "type": "text"
+            },
+            {
+              "key": "Kommun",
+              "value": "Stockholm",
+              "description": "Hemkommun",
+              "type": "text"
+            },
+            {
+              "key": "About",
+              "value": "Jag är en erfaren utvecklare med 5 års erfarenhet inom .NET och React. Jag söker nya möjligheter inom webbutveckling och har särskilt intresse för backend-utveckling med moderna teknologier som ASP.NET Core och Azure-tjänster.",
+              "description": "Beskrivning om sig själv",
+              "type": "text"
+            },
+            {
+              "key": "IsRegisteredAF",
+              "value": "Ja",
+              "description": "Inskriven på Arbetsförmedlingen (Ja/Nej)",
+              "type": "text"
+            },
+            {
+              "key": "AFRegistrationDate",
+              "value": "2024-01-15",
+              "description": "Datum för inskrivning på AF (YYYY-MM-DD)",
+              "type": "text"
+            },
+            {
+              "key": "CvFile",
+              "description": "CV-fil (PDF/DOC/DOCX) - IMPORTANT: You must manually select a file here in Postman!",
+              "type": "file",
+              "src": []
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/contact/submit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contact",
+            "submit"
+          ]
+        },
+        "description": "Submit a contact form with CV file. IMPORTANT: You must manually select a file for the CvFile parameter in Postman before sending this request."
+      },
+      "response": []
+    },
+    {
+      "name": "Submit Contact Form - Not Registered AF",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Contact form submitted successfully\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson.isSuccess).to.be.true;",
+              "    pm.expect(responseJson.message).to.include('Tack för din ansökan');",
+              "    pm.expect(responseJson.submissionId).to.exist;",
+              "    pm.expect(responseJson.submittedAt).to.exist;",
+              "    pm.expect(responseJson.errors).to.be.an('array').that.is.empty;",
+              "});",
+              "",
+              "pm.test(\"Submission ID format is correct\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson.submissionId).to.match(/^[A-F0-9]{8}$/);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "Name",
+              "value": "Maria Svensson",
+              "description": "För- och efternamn",
+              "type": "text"
+            },
+            {
+              "key": "Email",
+              "value": "maria.svensson@example.com",
+              "description": "E-postadress",
+              "type": "text"
+            },
+            {
+              "key": "Phone",
+              "value": "0709876543",
+              "description": "Telefonnummer",
+              "type": "text"
+            },
+            {
+              "key": "Kommun",
+              "value": "Göteborg",
+              "description": "Hemkommun",
+              "type": "text"
+            },
+            {
+              "key": "About",
+              "value": "Jag är en nyutexaminerad utvecklare från KTH med specialisering inom frontend-utveckling. Jag har goda kunskaper inom React, TypeScript och modern CSS.",
+              "description": "Beskrivning om sig själv",
+              "type": "text"
+            },
+            {
+              "key": "IsRegisteredAF",
+              "value": "Nej",
+              "description": "Inskriven på Arbetsförmedlingen (Ja/Nej)",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/contact/submit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contact",
+            "submit"
+          ]
+        },
+        "description": "Submit a contact form from someone not registered with Arbetsförmedlingen (no AFRegistrationDate)"
+      },
+      "response": []
+    },
+    {
+      "name": "Submit Contact Form - Invalid Data",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Validation errors returned\", function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson.isSuccess).to.be.false;",
+              "    pm.expect(responseJson.errors).to.be.an('array');",
+              "    pm.expect(responseJson.errors.length).to.be.greaterThan(0);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "Name",
+              "value": "",
+              "description": "Empty name to trigger validation",
+              "type": "text"
+            },
+            {
+              "key": "Email",
+              "value": "invalid-email",
+              "description": "Invalid email format",
+              "type": "text"
+            },
+            {
+              "key": "Phone",
+              "value": "123",
+              "description": "Invalid phone number",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/contact/submit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contact",
+            "submit"
+          ]
+        },
+        "description": "Test validation by submitting invalid data"
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "console.log('Testing HaidersAPI Contact Form endpoints...');",
+          "console.log('Base URL: ' + pm.variables.get('baseUrl'));"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Response time is acceptable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "pm.test('Response has proper content type', function () {",
+          "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "});"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,391 @@
+{
+	"info": {
+		"_postman_id": "haidersapi-contact-collection",
+		"name": "HaidersAPI - Contact Form & Authentication",
+		"description": "Complete test suite for HaidersAPI including secure contact form submission with CV file uploads and authentication endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "adoteam-enterprise"
+	},
+	"item": [
+		{
+			"name": "🔐 Authentication",
+			"item": [
+				{
+					"name": "Login with External Service",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"test@adoteam.dev\",\n  \"password\": \"SecurePass123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/refresh",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "refresh"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "profile"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "logout"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📧 Contact Form",
+			"item": [
+				{
+					"name": "Submit Contact Form with CV",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Name",
+									"value": "John Andersson",
+									"type": "text"
+								},
+								{
+									"key": "Email",
+									"value": "john.andersson@example.com",
+									"type": "text"
+								},
+								{
+									"key": "Phone",
+									"value": "0701234567",
+									"type": "text"
+								},
+								{
+									"key": "Kommun",
+									"value": "Stockholm",
+									"type": "text"
+								},
+								{
+									"key": "About",
+									"value": "Jag är en erfaren utvecklare med 5 års erfarenhet inom .NET och React. Jag söker nya möjligheter inom webbutveckling och har särskilt intresse för backend-utveckling med moderna teknologier som ASP.NET Core och Azure-tjänster.",
+									"type": "text"
+								},
+								{
+									"key": "IsRegisteredAF",
+									"value": "Ja",
+									"type": "text"
+								},
+								{
+									"key": "AFRegistrationDate",
+									"value": "2024-01-15",
+									"type": "text"
+								},
+								{
+									"key": "CvFile",
+									"src": "CV_John_Andersson.pdf",
+									"type": "file",
+									"description": "Upload your CV file (PDF, DOC, DOCX, TXT, RTF - Max 5MB)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contact/submit",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "contact", "submit"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Contact Form - Not Registered AF",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Name",
+									"value": "Maria Johansson",
+									"type": "text"
+								},
+								{
+									"key": "Email",
+									"value": "maria.johansson@example.com",
+									"type": "text"
+								},
+								{
+									"key": "Phone",
+									"value": "0709876543",
+									"type": "text"
+								},
+								{
+									"key": "Kommun",
+									"value": "Göteborg",
+									"type": "text"
+								},
+								{
+									"key": "About",
+									"value": "Nyutexaminerad från teknisk högskola med inriktning på mjukvaruutveckling. Har arbetat med projekt inom full-stack utveckling under mina studier och är redo att ta nästa steg i min karriär.",
+									"type": "text"
+								},
+								{
+									"key": "IsRegisteredAF",
+									"value": "Nej",
+									"type": "text"
+								},
+								{
+									"key": "CvFile",
+									"src": "CV_Maria_Johansson.pdf",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contact/submit",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "contact", "submit"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Contact Form - Validation Errors",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Name",
+									"value": "",
+									"type": "text",
+									"description": "Empty name should cause validation error"
+								},
+								{
+									"key": "Email",
+									"value": "invalid-email",
+									"type": "text",
+									"description": "Invalid email format"
+								},
+								{
+									"key": "Phone",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "Kommun",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "About",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "IsRegisteredAF",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contact/submit",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "contact", "submit"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Email Connectivity",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/contact/test-email",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "contact", "test-email"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contact Form Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/contact/info",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "contact", "info"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔧 System",
+			"item": [
+				{
+					"name": "Test Configuration",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/config/test",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "config", "test"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Database",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/database/test",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "database", "test"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set dynamic timestamp for form submissions",
+					"pm.globals.set('timestamp', new Date().toISOString());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Standard response validation",
+					"pm.test('Response status is success', function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+					"});",
+					"",
+					"// Log response for debugging",
+					"console.log('Response Body:', pm.response.text());",
+					"",
+					"// Extract tokens for authentication endpoints",
+					"if (pm.response.headers.get('Content-Type')?.includes('application/json')) {",
+					"    try {",
+					"        const response = pm.response.json();",
+					"        ",
+					"        if (response.accessToken) {",
+					"            pm.globals.set('accessToken', response.accessToken);",
+					"        }",
+					"        ",
+					"        if (response.refreshToken) {",
+					"            pm.globals.set('refreshToken', response.refreshToken);",
+					"        }",
+					"        ",
+					"        // Extract submission ID for contact forms",
+					"        if (response.submissionId) {",
+					"            pm.globals.set('lastSubmissionId', response.submissionId);",
+					"        }",
+					"    } catch (e) {",
+					"        console.log('Non-JSON response or parsing error:', e);",
+					"    }",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5170",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "lastSubmissionId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
